@@ -6,7 +6,7 @@
 
 const mongoose = require("mongoose")
 const dotenv = require("dotenv").config()
-const cc = mongoose.createConnection(process.env.MONGO_URL)
+// const cc = mongoose.createConnection(process.env.MONGO_URL)
 const chatModel = new mongoose.Schema({
     chatName: {
         type: String,
@@ -22,7 +22,7 @@ const chatModel = new mongoose.Schema({
     }],
     latestMessage: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "message"
+        ref: "Message"
     },
     groupAdmin: {
         type: mongoose.Schema.Types.ObjectId,
@@ -33,5 +33,5 @@ const chatModel = new mongoose.Schema({
         timestamps: true
     }
 )
-const Chat= cc.model("",chatModel)
-module.exports =Chat
+const Chat = mongoose.model("Chat", chatModel)
+module.exports = Chat

@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler")
 const generateToken = require("../config/generateToken")
 const User = require("../Models/userModel")
-const bcyrpt=require("bcryptjs")
+const bcyrpt = require("bcryptjs")
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password, pic } = req.body
     if (!name && !email && !password) {
@@ -35,7 +35,7 @@ const authUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({
         email: email
     })
-    if (user && await bcyrpt.compare(password,user.password)) {
+    if (user && await user.matchPassword(password)) {
         res.status(201).json({
             _id: user._id,
             name: user.name,
@@ -49,4 +49,21 @@ const authUser = asyncHandler(async (req, res) => {
         throw new Error("Invalid email or Password")
     }
 })
-module.exports = { registerUser, authUser }
+
+//  this is for /api/user?search=veera search functionality
+const allUsers = asyncHandler(async (req, res) => {
+    const keyword = req.query.search
+        ? {
+            $or: [
+                { name: { $regex: req.query.search, $options: "i" } },
+                { email: { $regex: req.query.search, $options: "i" } },
+            ],
+        }
+        : {};
+
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+    res.send(users);
+})
+module.exports = { registerUser, authUser, allUsers }
+
+//facing problem regarding to the .find({ _id: { $ne: req.user._id } }) finding fails ****Have to do working fine what happend i to dont know  just copy code

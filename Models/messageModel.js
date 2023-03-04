@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const dotenv = require("dotenv")
-const cc = mongoose.createConnection(process.env.MONGO_URL)
+// const cc = mongoose.createConnection(process.env.MONGO_URL)
 const messageModel = new mongoose.Schema({
     sender: {
         type: mongoose.Schema.Types.ObjectId,
@@ -19,5 +19,5 @@ const messageModel = new mongoose.Schema({
         timestamps: true
     }
 )
-const Message = cc.model("Message", messageModel)
+const Message = mongoose.model("Message", messageModel)
 moduele.export = Message

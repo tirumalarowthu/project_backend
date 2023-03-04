@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const dotenv = require("dotenv").config()
 const bcrypt = require("bcryptjs")
-const cc = mongoose.createConnection(process.env.MONGO_URL)
+// const cc = mongoose.createConnection(process.env.MONGO_URL)
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -36,6 +36,10 @@ userSchema.pre('save', async function (next) {
         next(error);
     }
 });
-const User = cc.model("User", userSchema)
+//to create a method in a schema***************
+userSchema.methods.matchPassword=async function (enteredPassword){
+    return await bcrypt.compare(enteredPassword,this.password)
+}
+const User =mongoose.model("User", userSchema)
 
 module.exports = User
